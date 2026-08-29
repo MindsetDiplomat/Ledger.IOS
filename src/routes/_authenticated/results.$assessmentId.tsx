@@ -1,28 +1,42 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Calendar, Loader2, Lock } from "lucide-react";
-import { useState } from "react";
+import { Calendar, Download, Loader2, Lock } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { z } from "zod";
 import { AppShell } from "@/components/layout/AppShell";
 import { ScoreBar, ScoreRing } from "@/components/brand/ScoreRing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getReport, redeemAccessCode } from "@/lib/assessment.functions";
+import { createWhopCheckout, getReport, redeemAccessCode } from "@/lib/assessment.functions";
 import { money, type Leakage, type Scores } from "@/lib/scoring";
 import type { AiOutput } from "@/lib/ai.server";
+import { downloadReportPdf } from "@/lib/pdf";
 
 const WHOP_URL = "https://whop.com/mind-management-academy-hq/your-ai-business-compass";
 const CALENDLY_URL = "https://calendly.com/mind-management/lets-connect";
 
+const searchSchema = z.object({
+  unlocked: fallback(z.string(), "").default(""),
+});
+
 export const Route = createFileRoute("/_authenticated/results/$assessmentId")({
+  validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [
       { title: "Your results — AI Business Compass™" },
-      { name: "description", content: "Your business scores, revenue leakage and primary bottleneck." },
+      {
+        name: "description",
+        content: "Your business scores, revenue leakage and primary bottleneck.",
+      },
       { property: "og:title", content: "Your results — AI Business Compass™" },
-      { property: "og:description", content: "Your scores, revenue leakage and primary bottleneck." },
+      {
+        property: "og:description",
+        content: "Your scores, revenue leakage and primary bottleneck.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -31,15 +45,26 @@ export const Route = createFileRoute("/_authenticated/results/$assessmentId")({
 
 function Results() {
   const { assessmentId } = Route.useParams();
+  const search = Route.useSearch();
   const load = useServerFn(getReport);
   const redeem = useServerFn(redeemAccessCode);
+  const startCheckout = useServerFn(createWhopCheckout);
   const queryClient = useQueryClient();
   const [code, setCode] = useState("");
+  const [downloading, setDownloading] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ["report", assessmentId],
     queryFn: () => load({ data: { assessmentId } }),
   });
+
+  useEffect(() => {
+    if (search.unlocked === "1") {
+      toast.success("Payment received — unlocking your Growth Roadmap.");
+      queryClient.invalidateQueries({ queryKey: ["report", assessmentId] });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search.unlocked]);
 
   const unlock = useMutation({
     mutationFn: async () => redeem({ data: { assessmentId, code } }),
@@ -49,6 +74,33 @@ function Results() {
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Couldn't redeem that code."),
   });
+
+  const checkout = useMutation({
+    mutationFn: async () =>
+      startCheckout({ data: { assessmentId, origin: window.location.origin } }),
+    onSuccess: (res) => {
+      window.location.href = res.url;
+    },
+    onError: () => {
+      window.open(WHOP_URL, "_blank", "noreferrer");
+    },
+  });
+
+  async function handleDownload() {
+    if (!data) return;
+    setDownloading(true);
+    try {
+      await downloadReportPdf({
+        scores: data.scores as unknown as Scores,
+        leakage: data.leakage as unknown as Leakage,
+        ai: data.ai_output as unknown as AiOutput,
+      });
+    } catch {
+      toast.error("Couldn't generate the PDF. Please try again.");
+    } finally {
+      setDownloading(false);
+    }
+  }
 
   if (isLoading) {
     return (
@@ -91,7 +143,9 @@ function Results() {
             Your Business Compass
           </span>
           <ScoreRing score={scores.overall} />
-          <p className="max-w-2xl text-pretty leading-relaxed text-muted-foreground">{ai.summary}</p>
+          <p className="max-w-2xl text-pretty leading-relaxed text-muted-foreground">
+            {ai.summary}
+          </p>
         </motion.div>
 
         <div className="mt-6 grid gap-6 rounded-3xl border border-border/70 bg-card p-8 shadow-soft sm:grid-cols-2">
@@ -169,10 +223,8 @@ function Results() {
               <p className="max-w-sm text-sm text-muted-foreground">
                 Unlock your full Growth Roadmap and revenue opportunities for $9.99.
               </p>
-              <Button asChild>
-                <a href={WHOP_URL} target="_blank" rel="noreferrer">
-                  Unlock for $9.99
-                </a>
+              <Button onClick={() => checkout.mutate()} disabled={checkout.isPending}>
+                {checkout.isPending ? "Redirecting…" : "Unlock for $9.99"}
               </Button>
               <div className="flex w-full max-w-sm gap-2">
                 <Input
@@ -181,7 +233,11 @@ function Results() {
                   placeholder="Enter your access code"
                   maxLength={40}
                 />
-                <Button variant="outline" onClick={() => unlock.mutate()} disabled={unlock.isPending}>
+                <Button
+                  variant="outline"
+                  onClick={() => unlock.mutate()}
+                  disabled={unlock.isPending}
+                >
                   Redeem
                 </Button>
               </div>
@@ -204,6 +260,15 @@ function Results() {
               <p className="text-sm font-medium">Next best action</p>
               <p className="mt-2 text-sm text-muted-foreground">{ai.next_best_action}</p>
             </div>
+            <Button
+              variant="outline"
+              className="mt-6 w-full"
+              onClick={handleDownload}
+              disabled={downloading}
+            >
+              <Download className="h-4 w-4" />
+              {downloading ? "Preparing PDF…" : "Download report (PDF)"}
+            </Button>
           </div>
         ) : null}
 
@@ -217,9 +282,9 @@ function Results() {
               Diagnosis is step one. Implementation is step two.
             </h2>
             <p className="max-w-md text-sm text-muted-foreground">
-              This report tells you what's broken and what it's costing you. A strategy session with Mind
-              Management Academy is where we map exactly how to fix {ai.primary_bottleneck?.toLowerCase() || "it"}
-              {" "}for your business.
+              This report tells you what's broken and what it's costing you. A strategy session with
+              Mind Management Academy is where we map exactly how to fix{" "}
+              {ai.primary_bottleneck?.toLowerCase() || "it"} for your business.
             </p>
             <Button size="lg" asChild>
               <a href={CALENDLY_URL} target="_blank" rel="noreferrer">

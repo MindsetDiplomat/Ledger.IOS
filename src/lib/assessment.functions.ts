@@ -40,10 +40,12 @@ export const getActiveAssessment = createServerFn({ method: "POST" })
 
 export const saveResponse = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { assessmentId: string; questionKey: string; value: AnswerValue; index: number }) => {
-    if (!input?.assessmentId || !input?.questionKey) throw new Error("Invalid response payload");
-    return input;
-  })
+  .inputValidator(
+    (input: { assessmentId: string; questionKey: string; value: AnswerValue; index: number }) => {
+      if (!input?.assessmentId || !input?.questionKey) throw new Error("Invalid response payload");
+      return input;
+    },
+  )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -151,24 +153,25 @@ export const getDashboard = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const [{ data: profile }, { data: reports }, { data: inProgress }, { data: roles }] = await Promise.all([
-      supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
-      supabase
-        .from("reports")
-        .select("*")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false })
-        .limit(10),
-      supabase
-        .from("assessments")
-        .select("*")
-        .eq("user_id", userId)
-        .eq("status", "in_progress")
-        .order("started_at", { ascending: false })
-        .limit(1)
-        .maybeSingle(),
-      supabase.from("user_roles").select("role").eq("user_id", userId),
-    ]);
+    const [{ data: profile }, { data: reports }, { data: inProgress }, { data: roles }] =
+      await Promise.all([
+        supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+        supabase
+          .from("reports")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false })
+          .limit(10),
+        supabase
+          .from("assessments")
+          .select("*")
+          .eq("user_id", userId)
+          .eq("status", "in_progress")
+          .order("started_at", { ascending: false })
+          .limit(1)
+          .maybeSingle(),
+        supabase.from("user_roles").select("role").eq("user_id", userId),
+      ]);
 
     return {
       profile,

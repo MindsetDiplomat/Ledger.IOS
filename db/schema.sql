@@ -31,6 +31,7 @@ CREATE TABLE public.profiles (
   company text,
   industries text[] NOT NULL DEFAULT '{}',
   monthly_revenue text,
+  theme text CHECK (theme IN ('light', 'dark')),
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );

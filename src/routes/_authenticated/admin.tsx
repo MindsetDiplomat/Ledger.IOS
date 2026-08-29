@@ -20,9 +20,14 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
 });
 
+const UNLOCK_PRICE = 9.99;
+
 function AdminPage() {
   const load = useServerFn(adminListAssessments);
-  const { data, isLoading, error } = useQuery({ queryKey: ["admin-list"], queryFn: () => load({}) });
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["admin-list"],
+    queryFn: () => load({}),
+  });
   const [q, setQ] = useState("");
 
   const rows = useMemo(() => {
@@ -34,11 +39,47 @@ function AdminPage() {
     );
   }, [data, q]);
 
+  const stats = useMemo(() => {
+    const all = data?.rows ?? [];
+    const total = all.length;
+    const premiumCount = all.filter((r) => r.hasPremium).length;
+    const overalls = all.map((r) => r.overall).filter((n): n is number => n !== null);
+    const avgScore = overalls.length ? overalls.reduce((a, b) => a + b, 0) / overalls.length : null;
+    const conversionRate = total ? (premiumCount / total) * 100 : 0;
+    const revenue = premiumCount * UNLOCK_PRICE;
+    return { total, premiumCount, avgScore, conversionRate, revenue };
+  }, [data]);
+
   return (
     <AppShell isAdmin>
       <div className="mx-auto max-w-6xl px-5 py-14">
         <h1 className="font-display text-4xl font-semibold tracking-tight">Submissions</h1>
-        <p className="mt-2 text-muted-foreground">Every completed diagnostic and the answers behind it.</p>
+        <p className="mt-2 text-muted-foreground">
+          Every completed diagnostic and the answers behind it.
+        </p>
+
+        {data ? (
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <StatCard label="Total submissions" value={String(stats.total)} />
+            <StatCard
+              label="Average score"
+              value={stats.avgScore !== null ? stats.avgScore.toFixed(0) : "—"}
+            />
+            <StatCard
+              label="Premium conversion"
+              value={`${stats.conversionRate.toFixed(1)}%`}
+              hint={`${stats.premiumCount} of ${stats.total} unlocked`}
+            />
+            <StatCard
+              label="Estimated revenue"
+              value={stats.revenue.toLocaleString(undefined, {
+                style: "currency",
+                currency: "USD",
+              })}
+              hint={`$${UNLOCK_PRICE} × ${stats.premiumCount} unlocks`}
+            />
+          </div>
+        ) : null}
 
         <Input
           value={q}
@@ -72,16 +113,34 @@ function AdminPage() {
                   <span className="text-xs text-muted-foreground">
                     {r.submittedAt ? new Date(r.submittedAt).toLocaleDateString() : "—"}
                   </span>
-                  <span className="font-display text-lg font-semibold tabular-nums">{r.overall ?? "—"}</span>
+                  <span className="font-display text-lg font-semibold tabular-nums">
+                    {r.overall ?? "—"}
+                  </span>
                 </div>
               </Link>
             ))}
             {!rows.length ? (
-              <p className="px-6 py-10 text-center text-sm text-muted-foreground">No submissions yet.</p>
+              <p className="px-6 py-10 text-center text-sm text-muted-foreground">
+                No submissions yet.
+              </p>
             ) : null}
           </div>
         )}
       </div>
     </AppShell>
+  );
+}
+
+function StatCard({ label, value, hint }: { label: string; value: string; hint?: string }) {
+  return (
+    <div className="rounded-3xl border border-border/70 bg-card p-6 shadow-soft">
+      <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-2 font-display text-3xl font-semibold tracking-tight tabular-nums">
+        {value}
+      </p>
+      {hint ? <p className="mt-1 text-xs text-muted-foreground">{hint}</p> : null}
+    </div>
   );
 }

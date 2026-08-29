@@ -1,5 +1,5 @@
 // Server-only: Whop checkout + webhook handling for the $9.99 Growth Roadmap unlock.
-import { unwrapWebhook } from "@whop/sdk";
+import { unwrapWebhook } from "@whop/sdk/helpers";
 
 export async function createCheckoutUrl(opts: {
   assessmentId: string;

@@ -71,7 +71,10 @@ function fallback(scores: Scores, leakage: Leakage, bottleneck: string): AiOutpu
     ],
     revenue_opportunities: leakage.causes
       .slice(0, 3)
-      .map((c) => `Closing the gap in ${c.label.toLowerCase()} represents roughly $${c.amount.toLocaleString()} per month.`),
+      .map(
+        (c) =>
+          `Closing the gap in ${c.label.toLowerCase()} represents roughly $${c.amount.toLocaleString()} per month.`,
+      ),
     primary_bottleneck: bottleneck,
     bottleneck_explanation: `${bottleneck} scored lowest across your assessment, and the surrounding answers confirm the pattern. Until it is addressed, improvements elsewhere will not compound.`,
     recommended_priority: `Address ${bottleneck.toLowerCase()} before investing further in lead volume or new tooling.`,
@@ -129,10 +132,15 @@ export async function runDiagnostic(
       ...base,
       ...parsed,
       priorities:
-        Array.isArray(parsed.priorities) && parsed.priorities.length ? parsed.priorities : base.priorities,
+        Array.isArray(parsed.priorities) && parsed.priorities.length
+          ? parsed.priorities
+          : base.priorities,
     };
   } catch (error) {
-    if (error instanceof Error && (error.message === "RATE_LIMIT" || error.message === "NO_CREDITS")) {
+    if (
+      error instanceof Error &&
+      (error.message === "RATE_LIMIT" || error.message === "NO_CREDITS")
+    ) {
       throw error;
     }
     console.error("[ai] diagnostic failed", error);
