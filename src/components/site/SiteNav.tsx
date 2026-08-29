@@ -24,14 +24,23 @@ export function SiteNav() {
             </a>
           ))}
         </nav>
-        <a
-          href="https://whop.com/joined/mind-management-academy-hq/products/ledger-82/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-md bg-gradient-bronze px-4 py-2 text-sm font-medium text-bronze-foreground shadow-elegant transition hover:brightness-110"
-        >
-          Start audit
-        </a>
+        <div className="flex items-center gap-4">
+          <Link
+            to="/auth"
+            search={{ mode: "signin", redirect: "/ledger/dashboard" }}
+            className="text-sm text-muted-foreground transition hover:text-foreground"
+          >
+            Sign in
+          </Link>
+          <a
+            href="https://whop.com/joined/mind-management-academy-hq/products/ledger-82/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-md bg-gradient-bronze px-4 py-2 text-sm font-medium text-bronze-foreground shadow-elegant transition hover:brightness-110"
+          >
+            Start audit
+          </a>
+        </div>
       </div>
     </header>
   );

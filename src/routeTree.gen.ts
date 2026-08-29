@@ -12,13 +12,17 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as LedgerRouteImport } from './routes/ledger'
+import { Route as LedgerRouteRouteImport } from './routes/ledger/route'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAssessmentRouteImport } from './routes/_authenticated/assessment'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as LedgerIndexRouteImport } from './routes/ledger/index'
+import { Route as LedgerAuthenticatedRouteRouteImport } from './routes/ledger/_authenticated/route'
 import { Route as AuthenticatedAdminAssessmentIdRouteImport } from './routes/_authenticated/admin.$assessmentId'
 import { Route as AuthenticatedResultsAssessmentIdRouteImport } from './routes/_authenticated/results.$assessmentId'
+import { Route as LedgerAuthenticatedDashboardRouteImport } from './routes/ledger/_authenticated/dashboard'
+import { Route as LedgerAuthenticatedSettingsRouteImport } from './routes/ledger/_authenticated/settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,7 +38,7 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LedgerRoute = LedgerRouteImport.update({
+const LedgerRouteRoute = LedgerRouteRouteImport.update({
   id: '/ledger',
   path: '/ledger',
   getParentRoute: () => rootRouteImport,
@@ -59,6 +63,16 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const LedgerIndexRoute = LedgerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LedgerRouteRoute,
+} as any)
+const LedgerAuthenticatedRouteRoute =
+  LedgerAuthenticatedRouteRouteImport.update({
+    id: '/_authenticated',
+    getParentRoute: () => LedgerRouteRoute,
+  } as any)
 const AuthenticatedAdminAssessmentIdRoute =
   AuthenticatedAdminAssessmentIdRouteImport.update({
     id: '/$assessmentId',
@@ -71,84 +85,114 @@ const AuthenticatedResultsAssessmentIdRoute =
     path: '/results/$assessmentId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const LedgerAuthenticatedDashboardRoute =
+  LedgerAuthenticatedDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => LedgerAuthenticatedRouteRoute,
+  } as any)
+const LedgerAuthenticatedSettingsRoute =
+  LedgerAuthenticatedSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => LedgerAuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ledger': typeof LedgerRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/ledger': typeof LedgerRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/assessment': typeof AuthenticatedAssessmentRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/ledger/': typeof LedgerIndexRoute
   '/admin/$assessmentId': typeof AuthenticatedAdminAssessmentIdRoute
   '/results/$assessmentId': typeof AuthenticatedResultsAssessmentIdRoute
+  '/ledger/dashboard': typeof LedgerAuthenticatedDashboardRoute
+  '/ledger/settings': typeof LedgerAuthenticatedSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/ledger': typeof LedgerRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/ledger': typeof LedgerIndexRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/assessment': typeof AuthenticatedAssessmentRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/admin/$assessmentId': typeof AuthenticatedAdminAssessmentIdRoute
   '/results/$assessmentId': typeof AuthenticatedResultsAssessmentIdRoute
+  '/ledger/dashboard': typeof LedgerAuthenticatedDashboardRoute
+  '/ledger/settings': typeof LedgerAuthenticatedSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/ledger': typeof LedgerRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/ledger': typeof LedgerRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/ledger/_authenticated': typeof LedgerAuthenticatedRouteRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/assessment': typeof AuthenticatedAssessmentRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/ledger/': typeof LedgerIndexRoute
   '/_authenticated/admin/$assessmentId': typeof AuthenticatedAdminAssessmentIdRoute
   '/_authenticated/results/$assessmentId': typeof AuthenticatedResultsAssessmentIdRoute
+  '/ledger/_authenticated/dashboard': typeof LedgerAuthenticatedDashboardRoute
+  '/ledger/_authenticated/settings': typeof LedgerAuthenticatedSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/auth'
     | '/ledger'
+    | '/auth'
     | '/reset-password'
     | '/admin'
     | '/assessment'
     | '/dashboard'
+    | '/ledger/'
     | '/admin/$assessmentId'
     | '/results/$assessmentId'
+    | '/ledger/dashboard'
+    | '/ledger/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
-    | '/ledger'
     | '/reset-password'
+    | '/ledger'
     | '/admin'
     | '/assessment'
     | '/dashboard'
     | '/admin/$assessmentId'
     | '/results/$assessmentId'
+    | '/ledger/dashboard'
+    | '/ledger/settings'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
-    | '/auth'
     | '/ledger'
+    | '/auth'
     | '/reset-password'
+    | '/ledger/_authenticated'
     | '/_authenticated/admin'
     | '/_authenticated/assessment'
     | '/_authenticated/dashboard'
+    | '/ledger/'
     | '/_authenticated/admin/$assessmentId'
     | '/_authenticated/results/$assessmentId'
+    | '/ledger/_authenticated/dashboard'
+    | '/ledger/_authenticated/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  LedgerRouteRoute: typeof LedgerRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
-  LedgerRoute: typeof LedgerRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
@@ -179,7 +223,7 @@ declare module '@tanstack/react-router' {
       id: '/ledger'
       path: '/ledger'
       fullPath: '/ledger'
-      preLoaderRoute: typeof LedgerRouteImport
+      preLoaderRoute: typeof LedgerRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -210,6 +254,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/ledger/': {
+      id: '/ledger/'
+      path: '/'
+      fullPath: '/ledger/'
+      preLoaderRoute: typeof LedgerIndexRouteImport
+      parentRoute: typeof LedgerRouteRoute
+    }
+    '/ledger/_authenticated': {
+      id: '/ledger/_authenticated'
+      path: ''
+      fullPath: '/ledger'
+      preLoaderRoute: typeof LedgerAuthenticatedRouteRouteImport
+      parentRoute: typeof LedgerRouteRoute
+    }
     '/_authenticated/admin/$assessmentId': {
       id: '/_authenticated/admin/$assessmentId'
       path: '/$assessmentId'
@@ -223,6 +281,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/results/$assessmentId'
       preLoaderRoute: typeof AuthenticatedResultsAssessmentIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/ledger/_authenticated/dashboard': {
+      id: '/ledger/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/ledger/dashboard'
+      preLoaderRoute: typeof LedgerAuthenticatedDashboardRouteImport
+      parentRoute: typeof LedgerAuthenticatedRouteRoute
+    }
+    '/ledger/_authenticated/settings': {
+      id: '/ledger/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/ledger/settings'
+      preLoaderRoute: typeof LedgerAuthenticatedSettingsRouteImport
+      parentRoute: typeof LedgerAuthenticatedRouteRoute
     }
   }
 }
@@ -255,11 +327,41 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface LedgerAuthenticatedRouteRouteChildren {
+  LedgerAuthenticatedDashboardRoute: typeof LedgerAuthenticatedDashboardRoute
+  LedgerAuthenticatedSettingsRoute: typeof LedgerAuthenticatedSettingsRoute
+}
+
+const LedgerAuthenticatedRouteRouteChildren: LedgerAuthenticatedRouteRouteChildren =
+  {
+    LedgerAuthenticatedDashboardRoute: LedgerAuthenticatedDashboardRoute,
+    LedgerAuthenticatedSettingsRoute: LedgerAuthenticatedSettingsRoute,
+  }
+
+const LedgerAuthenticatedRouteRouteWithChildren =
+  LedgerAuthenticatedRouteRoute._addFileChildren(
+    LedgerAuthenticatedRouteRouteChildren,
+  )
+
+interface LedgerRouteRouteChildren {
+  LedgerAuthenticatedRouteRoute: typeof LedgerAuthenticatedRouteRouteWithChildren
+  LedgerIndexRoute: typeof LedgerIndexRoute
+}
+
+const LedgerRouteRouteChildren: LedgerRouteRouteChildren = {
+  LedgerAuthenticatedRouteRoute: LedgerAuthenticatedRouteRouteWithChildren,
+  LedgerIndexRoute: LedgerIndexRoute,
+}
+
+const LedgerRouteRouteWithChildren = LedgerRouteRoute._addFileChildren(
+  LedgerRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  LedgerRouteRoute: LedgerRouteRouteWithChildren,
   AuthRoute: AuthRoute,
-  LedgerRoute: LedgerRoute,
   ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport

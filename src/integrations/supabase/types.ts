@@ -97,6 +97,194 @@ export type Database = {
         };
         Relationships: [];
       };
+      ledger_transactions: {
+        Row: {
+          id: string;
+          user_id: string;
+          description: string;
+          amount: number;
+          currency: string;
+          occurred_on: string;
+          category: string;
+          kind: string;
+          account: string | null;
+          receipt_path: string | null;
+          receipt_captured_at: string | null;
+          is_refund: boolean;
+          duplicate_status: string;
+          duplicate_of_transaction_id: string | null;
+          fx_rate: number | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          description: string;
+          amount: number;
+          currency?: string;
+          occurred_on: string;
+          category?: string;
+          kind: string;
+          account?: string | null;
+          receipt_path?: string | null;
+          receipt_captured_at?: string | null;
+          is_refund?: boolean;
+          duplicate_status?: string;
+          duplicate_of_transaction_id?: string | null;
+          fx_rate?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          description?: string;
+          amount?: number;
+          currency?: string;
+          occurred_on?: string;
+          category?: string;
+          kind?: string;
+          account?: string | null;
+          receipt_path?: string | null;
+          receipt_captured_at?: string | null;
+          is_refund?: boolean;
+          duplicate_status?: string;
+          duplicate_of_transaction_id?: string | null;
+          fx_rate?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ledger_transactions_duplicate_of_transaction_id_fkey";
+            columns: ["duplicate_of_transaction_id"];
+            isOneToOne: false;
+            referencedRelation: "ledger_transactions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ledger_investments: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          type: string;
+          value: number;
+          currency: string;
+          cost_basis: number | null;
+          entry_date: string | null;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          name: string;
+          type?: string;
+          value?: number;
+          currency?: string;
+          cost_basis?: number | null;
+          entry_date?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          name?: string;
+          type?: string;
+          value?: number;
+          currency?: string;
+          cost_basis?: number | null;
+          entry_date?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      ledger_subscriptions: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          amount: number;
+          currency: string;
+          frequency: string;
+          next_billing_date: string | null;
+          category: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          name: string;
+          amount: number;
+          currency?: string;
+          frequency?: string;
+          next_billing_date?: string | null;
+          category?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          name?: string;
+          amount?: number;
+          currency?: string;
+          frequency?: string;
+          next_billing_date?: string | null;
+          category?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      ledger_financial_periods: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          description: string | null;
+          start_date: string;
+          end_date: string;
+          color: string;
+          category: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          name: string;
+          description?: string | null;
+          start_date: string;
+          end_date: string;
+          color?: string;
+          category?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          name?: string;
+          description?: string | null;
+          start_date?: string;
+          end_date?: string;
+          color?: string;
+          category?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       profiles: {
         Row: {
           company: string | null;

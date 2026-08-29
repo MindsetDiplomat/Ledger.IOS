@@ -9,10 +9,13 @@ import { ThemeToggle } from "@/components/layout/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
+import { markTabSession, setPersistentLogin } from "@/lib/ledger/session";
 
 const searchSchema = z.object({
   mode: fallback(z.string(), "signin").default("signin"),
+  redirect: fallback(z.string(), "/dashboard").default("/dashboard"),
 });
 
 export const Route = createFileRoute("/auth")({
@@ -20,9 +23,15 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Sign in — AI Business Compass™" },
-      { name: "description", content: "Sign in to run your AI business diagnostic and view your reports." },
+      {
+        name: "description",
+        content: "Sign in to run your AI business diagnostic and view your reports.",
+      },
       { property: "og:title", content: "Sign in — AI Business Compass™" },
-      { property: "og:description", content: "Access your AI Business Compass diagnostic and reports." },
+      {
+        property: "og:description",
+        content: "Access your AI Business Compass diagnostic and reports.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -30,18 +39,20 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const { mode } = Route.useSearch();
+  const { mode, redirect } = Route.useSearch();
   const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(mode === "signup");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [stayLoggedIn, setStayLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/dashboard", replace: true });
+      if (data.session) navigate({ to: redirect, replace: true });
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -60,14 +71,18 @@ function AuthPage() {
         if (error) throw error;
         const { data } = await supabase.auth.getSession();
         if (data.session) {
-          navigate({ to: "/assessment" });
+          setPersistentLogin(stayLoggedIn);
+          markTabSession();
+          navigate({ to: redirect === "/dashboard" ? "/assessment" : redirect });
         } else {
           toast.success("Check your email to confirm your account.");
         }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate({ to: "/dashboard" });
+        setPersistentLogin(stayLoggedIn);
+        markTabSession();
+        navigate({ to: redirect });
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong.");
@@ -78,9 +93,10 @@ function AuthPage() {
 
   async function handleGoogle() {
     setLoading(true);
+    setPersistentLogin(stayLoggedIn);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/dashboard` },
+      options: { redirectTo: `${window.location.origin}${redirect}` },
     });
     if (error) {
       setLoading(false);
@@ -127,7 +143,12 @@ function AuthPage() {
               : "Sign in to continue your diagnostic."}
           </p>
 
-          <Button variant="outline" className="mt-7 w-full" onClick={handleGoogle} disabled={loading}>
+          <Button
+            variant="outline"
+            className="mt-7 w-full"
+            onClick={handleGoogle}
+            disabled={loading}
+          >
             <GoogleMark />
             Continue with Google
           </Button>
@@ -177,6 +198,13 @@ function AuthPage() {
                 required
               />
             </div>
+            <label className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Checkbox
+                checked={stayLoggedIn}
+                onCheckedChange={(v) => setStayLoggedIn(Boolean(v))}
+              />
+              Stay logged in for 30 days
+            </label>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Please wait…" : isSignUp ? "Create account" : "Sign in"}
             </Button>

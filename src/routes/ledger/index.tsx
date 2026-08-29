@@ -1,10 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { SiteNav } from "@/components/site/SiteNav";
-import { ArrowUpRight, Camera, Sparkles, TrendingDown, Wallet, Compass, ShieldCheck, Check } from "lucide-react";
+import {
+  ArrowUpRight,
+  Camera,
+  Sparkles,
+  TrendingDown,
+  Wallet,
+  Compass,
+  ShieldCheck,
+  Check,
+} from "lucide-react";
 import hero from "@/assets/hero.svg";
 
-export const Route = createFileRoute("/ledger")({
+export const Route = createFileRoute("/ledger/")({
   head: () => ({
     meta: [
       { title: "Ledger — Stop the leaks. Grow what you keep." },
@@ -28,7 +37,13 @@ function Landing() {
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 -z-10">
-          <img src={hero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-40" width={1920} height={1080} />
+          <img
+            src={hero}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover opacity-40"
+            width={1920}
+            height={1080}
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/80 to-background" />
         </div>
 
@@ -44,8 +59,9 @@ function Landing() {
               <span className="italic text-muted-foreground">can&apos;t track.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              Upload receipts and bank statements. Ledger&apos;s AI categorizes every transaction, surfaces hidden
-              leaks, and hands you a personalized freedom roadmap — in under 15 minutes.
+              Upload receipts and bank statements. Ledger&apos;s AI categorizes every transaction,
+              surfaces hidden leaks, and hands you a personalized freedom roadmap — in under 15
+              minutes.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <a
@@ -57,9 +73,12 @@ function Landing() {
                 Start your $7 audit
                 <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
-              <a href="#how" className="text-sm text-muted-foreground hover:text-foreground transition">
-                See how it works →
-              </a>
+              <Link
+                to="/ledger/dashboard"
+                className="text-sm text-muted-foreground hover:text-foreground transition"
+              >
+                Or track for free →
+              </Link>
             </div>
 
             {/* Proof bar */}
@@ -108,17 +127,35 @@ function Landing() {
           <div className="grid gap-12 md:grid-cols-[1fr,2fr] md:gap-20">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-bronze">The journey</p>
-              <h2 className="mt-3 font-display text-4xl md:text-5xl">Upload → Analyze → Discover → Plan.</h2>
+              <h2 className="mt-3 font-display text-4xl md:text-5xl">
+                Upload → Analyze → Discover → Plan.
+              </h2>
               <p className="mt-6 text-muted-foreground">
-                Most people don&apos;t need to earn more first. They need to stop leaking. Ledger finds the leaks,
-                then gives you the next move.
+                Most people don&apos;t need to earn more first. They need to stop leaking. Ledger
+                finds the leaks, then gives you the next move.
               </p>
             </div>
             <ol className="space-y-px overflow-hidden rounded-2xl border border-border bg-border">
-              <Step n="01" title="Upload" body="Receipts as photos, statements as PDF/CSV/bank export. We handle the rest." />
-              <Step n="02" title="AI categorization" body="Every transaction sorted, tagged, and converted to your base currency." />
-              <Step n="03" title="Leak detection" body="Subscriptions, recurring fees, and spending patterns that don't match your goals." />
-              <Step n="04" title="Freedom roadmap" body="A 30-day, 90-day, and annual plan — with progress tracking." />
+              <Step
+                n="01"
+                title="Upload"
+                body="Receipts as photos, statements as PDF/CSV/bank export. We handle the rest."
+              />
+              <Step
+                n="02"
+                title="AI categorization"
+                body="Every transaction sorted, tagged, and converted to your base currency."
+              />
+              <Step
+                n="03"
+                title="Leak detection"
+                body="Subscriptions, recurring fees, and spending patterns that don't match your goals."
+              />
+              <Step
+                n="04"
+                title="Freedom roadmap"
+                body="A 30-day, 90-day, and annual plan — with progress tracking."
+              />
             </ol>
           </div>
         </div>
@@ -127,8 +164,8 @@ function Landing() {
       {/* QUOTE */}
       <section className="mx-auto max-w-4xl px-6 py-24 md:py-32 text-center">
         <p className="font-display text-3xl leading-tight md:text-5xl">
-          &ldquo;You are losing <span className="text-bronze">$327/month</span> to subscriptions, fees, and
-          spending habits that aren&apos;t aligned with your goals.&rdquo;
+          &ldquo;You are losing <span className="text-bronze">$327/month</span> to subscriptions,
+          fees, and spending habits that aren&apos;t aligned with your goals.&rdquo;
         </p>
         <p className="mt-6 text-sm text-muted-foreground">— A typical Ledger audit, week one.</p>
       </section>
@@ -145,11 +182,13 @@ function Landing() {
               <span className="font-display text-6xl">$7</span>
               <span className="text-muted-foreground">/ one-time audit</span>
             </div>
-            <p className="mt-2 text-sm text-muted-foreground">Then $19/mo to keep tracking. Cancel anytime.</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Free to track your own money. $7 for an AI-written freedom roadmap.
+            </p>
             <ul className="mt-8 space-y-3 text-sm">
               {[
                 "Unlimited receipt uploads",
-                "Bank statement import (PDF / CSV)",
+                "Bank statement import (CSV)",
                 "Multi-currency with historical rates",
                 "AI leak detection & roadmap",
                 "Investment ledger",
@@ -168,6 +207,12 @@ function Landing() {
             >
               Start audit
             </a>
+            <Link
+              to="/ledger/dashboard"
+              className="mt-3 block text-center text-xs text-muted-foreground hover:text-foreground"
+            >
+              Or just track for free →
+            </Link>
             <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground">
               <ShieldCheck className="h-3.5 w-3.5" /> Bank-grade encryption · cancel anytime
             </div>
@@ -178,7 +223,9 @@ function Landing() {
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-8 md:flex-row">
           <Logo />
-          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Ledger. Built for operators.</p>
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} Ledger. Built for operators.
+          </p>
         </div>
       </footer>
     </div>
@@ -186,7 +233,9 @@ function Landing() {
 }
 
 function Logo() {
-  return <span className="font-display text-sm tracking-wide text-muted-foreground">L E D G E R</span>;
+  return (
+    <span className="font-display text-sm tracking-wide text-muted-foreground">L E D G E R</span>
+  );
 }
 
 function Stat({ value, label }: { value: string; label: string }) {
@@ -201,7 +250,9 @@ function Stat({ value, label }: { value: string; label: string }) {
 function Feature({ icon, title, body }: { icon: ReactNode; title: string; body: string }) {
   return (
     <div className="group relative bg-card p-8 transition hover:bg-card/70">
-      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-bronze/10 text-bronze">{icon}</div>
+      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-bronze/10 text-bronze">
+        {icon}
+      </div>
       <h3 className="mt-6 font-display text-2xl">{title}</h3>
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{body}</p>
     </div>
