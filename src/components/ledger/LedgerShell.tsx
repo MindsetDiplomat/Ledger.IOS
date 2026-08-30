@@ -6,7 +6,6 @@ import { ThemeToggle } from "@/components/layout/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { clearPersistentLogin } from "@/lib/ledger/session";
-import mmaLogo from "@/assets/mma-logo.jpg";
 
 export function LedgerShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
@@ -26,9 +25,9 @@ export function LedgerShell({ children }: { children: ReactNode }) {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <Link
             to="/ledger/dashboard"
-            className="flex items-center"
+            className="font-display text-sm tracking-wide text-foreground"
           >
-            <img src={new URL("/src/assets/mma-logo.jpg", import.meta.url).href} alt="Mind Management Academy" className="h-10 w-auto" />
+            L E D G E R
           </Link>
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="icon" asChild aria-label="Settings">
