@@ -12,7 +12,6 @@ import {
   Check,
 } from "lucide-react";
 import hero from "@/assets/hero.svg";
-import mmaLogo from "@/assets/mma-logo.jpg";
 
 export const Route = createFileRoute("/ledger/")({
   head: () => ({
@@ -235,7 +234,7 @@ function Landing() {
 
 function Logo() {
   return (
-    <img src={mmaLogo} alt="Mind Management Academy" className="h-8 w-auto" />
+    <span className="font-display text-sm tracking-wide text-muted-foreground">L E D G E R</span>
   );
 }
 
