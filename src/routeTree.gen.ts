@@ -17,6 +17,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAssessmentRouteImport } from './routes/_authenticated/assessment'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as LedgerIndexRouteImport } from './routes/ledger/index'
 import { Route as LedgerAuthenticatedRouteRouteImport } from './routes/ledger/_authenticated/route'
 import { Route as AuthenticatedAdminAssessmentIdRouteImport } from './routes/_authenticated/admin.$assessmentId'
@@ -63,6 +64,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const LedgerIndexRoute = LedgerIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/assessment': typeof AuthenticatedAssessmentRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/ledger/': typeof LedgerIndexRoute
   '/admin/$assessmentId': typeof AuthenticatedAdminAssessmentIdRoute
   '/results/$assessmentId': typeof AuthenticatedResultsAssessmentIdRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/assessment': typeof AuthenticatedAssessmentRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/admin/$assessmentId': typeof AuthenticatedAdminAssessmentIdRoute
   '/results/$assessmentId': typeof AuthenticatedResultsAssessmentIdRoute
   '/ledger/dashboard': typeof LedgerAuthenticatedDashboardRoute
@@ -136,6 +144,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/assessment': typeof AuthenticatedAssessmentRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/ledger/': typeof LedgerIndexRoute
   '/_authenticated/admin/$assessmentId': typeof AuthenticatedAdminAssessmentIdRoute
   '/_authenticated/results/$assessmentId': typeof AuthenticatedResultsAssessmentIdRoute
@@ -152,6 +161,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/assessment'
     | '/dashboard'
+    | '/profile'
     | '/ledger/'
     | '/admin/$assessmentId'
     | '/results/$assessmentId'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/assessment'
     | '/dashboard'
+    | '/profile'
     | '/admin/$assessmentId'
     | '/results/$assessmentId'
     | '/ledger/dashboard'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/assessment'
     | '/_authenticated/dashboard'
+    | '/_authenticated/profile'
     | '/ledger/'
     | '/_authenticated/admin/$assessmentId'
     | '/_authenticated/results/$assessmentId'
@@ -254,6 +266,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/ledger/': {
       id: '/ledger/'
       path: '/'
@@ -314,6 +333,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedAssessmentRoute: typeof AuthenticatedAssessmentRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedResultsAssessmentIdRoute: typeof AuthenticatedResultsAssessmentIdRoute
 }
 
@@ -321,6 +341,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedAssessmentRoute: AuthenticatedAssessmentRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedResultsAssessmentIdRoute: AuthenticatedResultsAssessmentIdRoute,
 }
 

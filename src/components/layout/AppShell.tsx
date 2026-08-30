@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { LogOut, Shield } from "lucide-react";
+import { LogOut, Shield, UserCog } from "lucide-react";
 import type { ReactNode } from "react";
 import { Logo } from "@/components/brand/Logo";
 import { ThemeToggle } from "@/components/layout/SiteHeader";
@@ -37,6 +37,11 @@ export function AppShell({ children, isAdmin }: { children: ReactNode; isAdmin?:
                 </Link>
               </Button>
             ) : null}
+            <Button variant="ghost" size="icon" asChild aria-label="Profile & settings">
+              <Link to="/profile">
+                <UserCog className="h-4 w-4" />
+              </Link>
+            </Button>
             <ThemeToggle />
             <Button variant="ghost" size="icon" onClick={signOut} aria-label="Sign out">
               <LogOut className="h-4 w-4" />
