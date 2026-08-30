@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as LedgerRouteRouteImport } from './routes/ledger/route'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAssessmentRouteImport } from './routes/_authenticated/assessment'
@@ -39,9 +41,19 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FeaturesRoute = FeaturesRouteImport.update({
+  id: '/features',
+  path: '/features',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LedgerRouteRoute = LedgerRouteRouteImport.update({
   id: '/ledger',
   path: '/ledger',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -108,6 +120,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ledger': typeof LedgerRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/features': typeof FeaturesRoute
+  '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/assessment': typeof AuthenticatedAssessmentRoute
@@ -122,6 +136,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/features': typeof FeaturesRoute
+  '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ledger': typeof LedgerIndexRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -139,6 +155,8 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/ledger': typeof LedgerRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/features': typeof FeaturesRoute
+  '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ledger/_authenticated': typeof LedgerAuthenticatedRouteRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -157,6 +175,8 @@ export interface FileRouteTypes {
     | '/'
     | '/ledger'
     | '/auth'
+    | '/features'
+    | '/pricing'
     | '/reset-password'
     | '/admin'
     | '/assessment'
@@ -171,6 +191,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/features'
+    | '/pricing'
     | '/reset-password'
     | '/ledger'
     | '/admin'
@@ -187,6 +209,8 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/ledger'
     | '/auth'
+    | '/features'
+    | '/pricing'
     | '/reset-password'
     | '/ledger/_authenticated'
     | '/_authenticated/admin'
@@ -205,6 +229,8 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   LedgerRouteRoute: typeof LedgerRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  FeaturesRoute: typeof FeaturesRoute
+  PricingRoute: typeof PricingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
@@ -231,11 +257,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/features': {
+      id: '/features'
+      path: '/features'
+      fullPath: '/features'
+      preLoaderRoute: typeof FeaturesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ledger': {
       id: '/ledger'
       path: '/ledger'
       fullPath: '/ledger'
       preLoaderRoute: typeof LedgerRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -383,6 +423,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   LedgerRouteRoute: LedgerRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  FeaturesRoute: FeaturesRoute,
+  PricingRoute: PricingRoute,
   ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport

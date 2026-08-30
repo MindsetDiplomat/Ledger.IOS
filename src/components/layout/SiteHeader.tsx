@@ -34,6 +34,20 @@ export function SiteHeader() {
             AI Business Compass<span className="text-primary">™</span>
           </span>
         </Link>
+        <nav className="hidden items-center gap-6 md:flex">
+          <Link
+            to="/features"
+            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Features
+          </Link>
+          <Link
+            to="/pricing"
+            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Pricing
+          </Link>
+        </nav>
         <div className="flex items-center gap-1">
           <ThemeToggle />
           {signedIn ? (
