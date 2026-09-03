@@ -234,7 +234,7 @@ function Landing() {
 
 function Logo() {
   return (
-    <span className="font-display text-sm tracking-wide text-muted-foreground">L E D G E R</span>
+    <img src="/mma-logo.jpg" alt="Mind Management Academy" className="h-8 w-auto" />
   );
 }
 
