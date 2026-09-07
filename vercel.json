@@ -1,7 +1,12 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist/server",
-  "devCommand": "npm run dev",
+  "public": "dist/client",
+  "functions": {
+    "api/**/*.ts": {
+      "maxDuration": 60
+    }
+  },
   "env": {
     "VITE_SUPABASE_URL": "@VITE_SUPABASE_URL",
     "VITE_SUPABASE_PUBLISHABLE_KEY": "@VITE_SUPABASE_PUBLISHABLE_KEY",
