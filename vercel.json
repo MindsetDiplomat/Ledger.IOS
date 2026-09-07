@@ -2,14 +2,10 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist/server",
   "public": "dist/client",
-  "functions": {
-    "api/**/*.ts": {
-      "maxDuration": 60
+  "routes": [
+    {
+      "src": "^/.*$",
+      "dest": "/server.js"
     }
-  },
-  "env": {
-    "VITE_SUPABASE_URL": "@VITE_SUPABASE_URL",
-    "VITE_SUPABASE_PUBLISHABLE_KEY": "@VITE_SUPABASE_PUBLISHABLE_KEY",
-    "ANTHROPIC_API_KEY": "@ANTHROPIC_API_KEY"
-  }
+  ]
 }
