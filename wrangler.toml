@@ -1,0 +1,22 @@
+name = "ledger-ios"
+main = "dist/server/server.js"
+compatibility_date = "2024-01-01"
+
+[build]
+command = "npm run build"
+cwd = "."
+
+[env.production]
+name = "ledger-ios"
+
+[[env.production.env]]
+binding = "VITE_SUPABASE_URL"
+default = "https://mzbpqpdtskzoajwnfjkf.supabase.co"
+
+[[env.production.env]]
+binding = "VITE_SUPABASE_PUBLISHABLE_KEY"
+default = "sb_publishable_gRMbYKOVRLocdl3AqEufGg_0-92jwFs"
+
+[[env.production.env]]
+binding = "ANTHROPIC_API_KEY"
+default = "placeholder"

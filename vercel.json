@@ -1,11 +1,4 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/server",
-  "public": "dist/client",
-  "routes": [
-    {
-      "src": "^/.*$",
-      "dest": "/server.js"
-    }
-  ]
+  "public": "dist/client"
 }
