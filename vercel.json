@@ -1,4 +1,10 @@
 {
   "buildCommand": "npm run build",
-  "public": "dist/client"
+  "public": "dist/client",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/[...routes]"
+    }
+  ]
 }
